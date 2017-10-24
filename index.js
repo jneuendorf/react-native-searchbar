@@ -56,7 +56,13 @@ export default class Search extends Component {
     keyboardAppearance: PropTypes.string,
     fontFamily: PropTypes.string,
     allDataOnEmptySearch: PropTypes.bool,
-    editable: PropTypes.bool
+    editable: PropTypes.bool,
+    styles: PropTypes.shape({
+      container: PropTypes.object,
+      navWrapper: PropTypes.object,
+      nav: PropTypes.object,
+      input: PropTypes.object
+    })
   };
 
   static defaultProps = {
@@ -88,7 +94,13 @@ export default class Search extends Component {
     allDataOnEmptySearch: false,
     backCloseSize: 28,
     fontSize: 20,
-    editable: true
+    editable: true,
+    styles: {
+      container: {},
+      navWrapper: {},
+      nav: {},
+      input: {}
+    }
   };
 
   constructor(props) {
@@ -240,25 +252,28 @@ export default class Search extends Component {
       closeButtonAccessibilityLabel,
       backCloseSize,
       fontSize,
-      editable
+      editable,
+      styles
     } = this.props;
     return (
       <Animated.View
         style={[
-          styles.container,
+          defaultStyles.container,
           {
             top: this.state.top,
             shadowOpacity: iOSHideShadow ? 0 : 0.7
-          }
+          },
+          styles.container
         ]}>
         {this.state.show && (
-          <View style={[styles.navWrapper, { backgroundColor }]}>
+          <View style={[defaultStyles.navWrapper, { backgroundColor }, styles.navWrapper]}>
             {Platform.OS === 'ios' &&
               iOSPadding && <View style={{ height: 20 }} />}
             <View
               style={[
-                styles.nav,
-                { height: (Platform.OS === 'ios' ? 52 : 62) + heightAdjust }
+                defaultStyles.nav,
+                { height: (Platform.OS === 'ios' ? 52 : 62) + heightAdjust },
+                styles.nav
               ]}>
               {!hideBack && (
                 <TouchableOpacity
@@ -287,14 +302,15 @@ export default class Search extends Component {
                 ref={ref => (this.textInput = ref)}
                 onLayout={() => focusOnLayout && this.textInput.focus()}
                 style={[
-                  styles.input,
+                  defaultStyles.input,
                   {
                     fontSize: fontSize,
                     color: textColor,
                     fontFamily: fontFamily,
                     marginLeft: hideBack ? 30 : 0,
                     marginTop: Platform.OS === 'ios' ? heightAdjust / 2 + 10 : 0
-                  }
+                  },
+                  styles.input
                 ]}
                 selectionColor={selectionColor}
                 onChangeText={input => this._onChangeText(input)}
@@ -345,7 +361,7 @@ export default class Search extends Component {
   };
 }
 
-const styles = StyleSheet.create({
+const defaultStyles = StyleSheet.create({
   container: {
     flex: 1,
     zIndex: 10,
